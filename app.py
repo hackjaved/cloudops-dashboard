@@ -1,8 +1,9 @@
 
-from flask import Flask, jsonify
 from datetime import datetime, timezone
-from markupsafe import escape
 import os
+
+from flask import Flask, jsonify
+from markupsafe import escape
 
 app = Flask(__name__)
 
@@ -11,11 +12,13 @@ APP_VERSION = "1.0.0"
 
 
 def get_environment():
+    """Return the current application environment."""
     return os.getenv("APP_ENV", "development")
 
 
 @app.route("/")
 def home():
+    """Display the CloudOps Dashboard homepage."""
     environment = escape(get_environment())
 
     return f"""
@@ -40,7 +43,7 @@ def home():
                 margin: auto;
                 padding: 30px;
                 border-radius: 12px;
-                box-shadow: 0 4px 15px #ddd;
+                box-shadow: 0 4px 15px #dddddd;
             }}
 
             h1 {{
@@ -66,8 +69,7 @@ def home():
             <p>Version: {APP_VERSION}</p>
 
             <p>
-                Welcome to your Azure DevOps
-                learning project!
+                Welcome to your Azure DevOps learning project!
             </p>
 
             <p>
@@ -79,6 +81,11 @@ def home():
                 Application Info:
                 <a href="/api/info">/api/info</a>
             </p>
+
+            <p>
+                Application Version:
+                <a href="/api/version">/api/version</a>
+            </p>
         </div>
     </body>
     </html>
@@ -87,6 +94,7 @@ def home():
 
 @app.route("/health")
 def health():
+    """Return application health information."""
     return jsonify({
         "status": "healthy",
         "application": APP_NAME,
@@ -98,12 +106,23 @@ def health():
 
 @app.route("/api/info")
 def app_info():
+    """Return detailed application information."""
     return jsonify({
         "application": APP_NAME,
         "version": APP_VERSION,
         "environment": get_environment(),
         "platform": "Python Flask",
         "project": "21-Day Azure DevOps Challenge"
+    })
+
+
+@app.route("/api/version")
+def version():
+    """Return application version information."""
+    return jsonify({
+        "application": APP_NAME,
+        "version": APP_VERSION,
+        "environment": get_environment()
     })
 
 

@@ -45,3 +45,15 @@ def test_unknown_endpoint(client):
     response = client.get("/does-not-exist")
 
     assert response.status_code == 404
+
+
+def test_version_endpoint(client):
+    response = client.get("/api/version")
+
+    assert response.status_code == 200
+
+    data = response.get_json()
+    
+    assert data["application"] == "CloudOps Dashboard"
+    assert data["version"] == "1.0.0"
+    assert data["environment"] == "development"
